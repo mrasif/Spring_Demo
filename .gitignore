@@ -1,0 +1,11 @@
+*.class
+# Package Files #
+*.jar
+*.war
+*.ear
+application.properties
+hs_err_pid*
+.idea
+.gradle
+build/
+out/

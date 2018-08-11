@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{users/base}">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/custom.css" type="text/css"/>
+</head>
+<body>
+<div layout:fragment="content">
+    <p th:text="${messages}"/>
+    <div class="card">
+        <form action="/login" method="post">
+            Username: <input type="text" class="form-group" name="username" placeholder="Username" /><br/>
+            Password: <input type="password" class="form-group" name="password" placeholder="Password"/><br/>
+            <input type="submit" class="btn btn-primary" value="Login"/>
+        </form>
+        <a href="/registration">Create an account</a>
+    </div>
+</div>
+</body>
+<th:block layout:fragment="scripts"></th:block>
+</html>
