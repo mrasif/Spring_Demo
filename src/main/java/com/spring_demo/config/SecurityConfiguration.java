@@ -31,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         String[] resources = new String[]{
-                "/", "/registration", "/login?error=1", "/css/**","/icons/**","/images/**","/js/**"
+                "/", "/registration", "/login**", "/css/**","/icons/**","/images/**","/js/**"
         };
         String[] admin_resources=new String[]{
             "/admins/**"
@@ -52,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().loginPage("/login").permitAll()
                 .and()
-                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login");
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login?logout");
 
     }
 
