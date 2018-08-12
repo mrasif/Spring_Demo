@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="css/custom.css" type="text/css"/>
+</head>
+<body>
+<div layout:fragment="content">
+    <form th:action="'/admins/user/'+${user.userId}+'/update'" th:method="patch">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        First Name: <input type="text" class="form-group" name="first_name" th:value="${user.firstName}"
+                           placeholder="First Name"/><br/>
+        Last Name: <input type="text" class="form-group" name="last_name" th:value="${user.lastName}"
+                          placeholder="Last Name"/><br/>
+        Username: <input type="text" class="form-group" name="username" disabled="disabled" th:value="${user.username}"
+                         placeholder="Username"/><br/>
+        Email: <input type="text" class="form-group" name="email" disabled="disabled" th:value="${user.email}" placeholder="Email"/><br/>
+        Status:
+        <input type="radio" id="active_true" th:checked="${user.active} ? true : false" class="form-group" name="active"
+               value="1"/><label for="active_true">Active</label>
+        <input type="radio" id="active_false" th:checked="${user.active} ? false : true" class="form-group"
+               name="active" value="0"/><label for="active_false">Deactive</label><br/>
+        Role:
+        <select name="role">
+            <option value="-1">Select Role</option>
+            <option th:each="role : ${roles}" th:value="${role.roleId}" th:text="${role.role}"
+                    th:selected="(${role.roleId} == *{user.roles[0].roleId})"></option>
+        </select>
+        <input type="submit" class="btn btn-primary" value="Update"/>
+    </form>
+</div>
+</body>
+<th:block layout:fragment="scripts"></th:block>
+</html>
