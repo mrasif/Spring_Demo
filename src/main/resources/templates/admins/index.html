@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="css/custom.css" type="text/css"/>
+</head>
+<body>
+<div layout:fragment="content">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Display Name</th>
+            <th>Email</th>
+            <th>Active</th>
+            <th>ROLE</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c th:each="user: ${users}">
+            <tr th:if="(${user.roles[0].role}!='ADMIN')">
+                <td th:text="${user.userId}"></td>
+                <td th:text="${user.getDisplayName()}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.active} ? 'ACTIVE' : 'DEACTIVE'"></td>
+                <td th:text="${user.roles[0].role}"></td>
+                <td><a th:href="'/admins/user/'+${user.userId}+'/edit'">Edit</a></td>
+            </tr>
+        </c>
+        </tbody>
+    </table>
+</div>
+</body>
+<th:block layout:fragment="scripts"></th:block>
+</html>
