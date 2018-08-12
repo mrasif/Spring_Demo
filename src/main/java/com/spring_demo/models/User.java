@@ -3,6 +3,7 @@ package com.spring_demo.models;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.Locale;
 import java.util.Set;
 
 @Entity
@@ -108,5 +109,9 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getDisplayName(){
+        return String.format(Locale.US,"%s %s",this.firstName,this.lastName);
     }
 }

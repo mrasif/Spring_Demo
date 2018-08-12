@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -25,13 +26,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
-                .passwordEncoder(getPasswordEncoder());
+                .passwordEncoder(getbCryptPasswordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         String[] resources = new String[]{
-                "/", "/registration", "/login?error=1", "/css/**","/icons/**","/images/**","/js/**"
+                "/", "/css/**","/icons/**","/images/**","/js/**"
+        };
+        String[] anonymous_resources = new String[]{
+                "/registration", "/login**"
         };
         String[] admin_resources=new String[]{
             "/admins/**"
@@ -39,24 +43,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         String[] moderator_resources=new String[]{
             "/moderators/**"
         };
-        String[] user_resources=new String[]{
+        String[] auth_resources=new String[]{
             "/users/**"
         };
-        http.csrf().disable();
+//        http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers(resources).permitAll()
                 .antMatchers(admin_resources).hasAuthority("ROLE_ADMIN")
                 .antMatchers(moderator_resources).hasAuthority("ROLE_MODERATOR")
-                .antMatchers(user_resources).hasAuthority("ROLE_USER")
+                .antMatchers(auth_resources).authenticated()
+                .antMatchers(anonymous_resources).not().authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll()
                 .and()
-                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login");
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login?logout");
 
     }
 
-    private PasswordEncoder getPasswordEncoder(){
+    /*private PasswordEncoder getPasswordEncoder(){
         return new PasswordEncoder() {
             @Override
             public String encode(CharSequence rawPassword) {
@@ -70,5 +75,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 return encodedPassword.equalsIgnoreCase(rawPassword.toString());
             }
         };
+    }*/
+
+    private BCryptPasswordEncoder getbCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
