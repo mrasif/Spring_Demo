@@ -3,6 +3,7 @@ package com.spring_demo.controllers;
 import com.spring_demo.models.User;
 import com.spring_demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,7 +43,7 @@ public class UserController {
         user.setLastName(lastName);
         user.setUsername(username);
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(getbCryptPasswordEncoder().encode(password));
         user.setActive(0);
         userRepository.save(user);
         ModelAndView mav=new ModelAndView();
@@ -56,5 +57,9 @@ public class UserController {
         ModelAndView mav=new ModelAndView();
         mav.setViewName("users/index");
         return mav;
+    }
+
+    private BCryptPasswordEncoder getbCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
