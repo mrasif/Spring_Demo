@@ -25,7 +25,7 @@
                 <td th:text="${user.userId}"></td>
                 <td th:text="${user.getDisplayName()}"></td>
                 <td th:text="${user.email}"></td>
-                <td th:text="${user.active} ? 'ACTIVE' : 'DEACTIVE'"></td>
+                <td th:text="${user.active} ? 'ACTIVE' : 'DACTIVE'"></td>
                 <td th:text="${user.roles[0].role}"></td>
                 <td><a th:href="'/admins/user/'+${user.userId}+'/edit'">Edit</a></td>
             </tr>
