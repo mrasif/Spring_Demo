@@ -1,6 +1,8 @@
 package com.spring_demo.controllers;
 
+import com.spring_demo.models.Role;
 import com.spring_demo.models.User;
+import com.spring_demo.repositories.RoleRepository;
 import com.spring_demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -8,11 +10,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @RestController
 public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @GetMapping("/login")
     public ModelAndView login(Model model){
@@ -44,6 +51,10 @@ public class UserController {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(getbCryptPasswordEncoder().encode(password));
+        Role role=roleRepository.findByRoleId(3).get();
+        Set<Role> roles=new HashSet<>();
+        roles.add(role);
+        user.setRoles(roles);
         user.setActive(0);
         userRepository.save(user);
         ModelAndView mav=new ModelAndView();

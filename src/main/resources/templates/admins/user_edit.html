@@ -8,6 +8,11 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <div th:if="${param.update}">
+        <div class="alert alert-info">
+            User details updated
+        </div>
+    </div>
     <form th:action="'/admins/user/'+${user.userId}+'/update'" th:method="patch">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         First Name: <input type="text" class="form-group" name="first_name" th:value="${user.firstName}"

@@ -64,7 +64,7 @@ public class AdminController {
         user.setRoles(roles);
         userRepository.save(user);
         ModelAndView mav=new ModelAndView();
-        mav.setViewName("redirect:/admins/user/"+id+"/edit");
+        mav.setViewName("redirect:/admins/user/"+id+"/edit?update");
         return mav;
     }
 
