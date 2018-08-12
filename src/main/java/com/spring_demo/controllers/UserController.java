@@ -49,4 +49,12 @@ public class UserController {
         mav.setViewName("redirect:/login");
         return mav;
     }
+
+    @GetMapping("/users")
+    public ModelAndView index(){
+
+        ModelAndView mav=new ModelAndView();
+        mav.setViewName("users/index");
+        return mav;
+    }
 }

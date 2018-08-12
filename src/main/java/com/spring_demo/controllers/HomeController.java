@@ -26,7 +26,6 @@ public class HomeController {
     @GetMapping(value = "/")
     public ModelAndView index(Model model) {
 //        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        boolean isAuthenticated=false;
 //        User user=null;
 //        try {
 //            user = (User) auth.getPrincipal();
@@ -34,26 +33,10 @@ public class HomeController {
 //        catch (Exception e){
 //
 //        }
-//        if (user!=null){
-//            isAuthenticated=true;
-//            String role = auth.getAuthorities().iterator().next().getAuthority();
-//            model.addAttribute("user", user.getUsername());
-//            model.addAttribute("role", role);
-//        }
-//        else {
-//            isAuthenticated=false;
-//        }
-//        model.addAttribute("isAuthenticated",isAuthenticated);
 
         ModelAndView mav = new ModelAndView();
         mav.setViewName("homes/index");
         mav.setStatus(HttpStatus.OK);
         return mav;
     }
-
-    @GetMapping(value = "/users/example")
-    public String example() {
-        return "Example.";
-    }
-
 }

@@ -31,7 +31,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         String[] resources = new String[]{
-                "/", "/registration", "/login**", "/css/**","/icons/**","/images/**","/js/**"
+                "/", "/css/**","/icons/**","/images/**","/js/**"
+        };
+        String[] anonymous_resources = new String[]{
+                "/registration", "/login**"
         };
         String[] admin_resources=new String[]{
             "/admins/**"
@@ -39,15 +42,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         String[] moderator_resources=new String[]{
             "/moderators/**"
         };
-        String[] user_resources=new String[]{
+        String[] auth_resources=new String[]{
             "/users/**"
         };
-        http.csrf().disable();
+//        http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers(resources).permitAll()
                 .antMatchers(admin_resources).hasAuthority("ROLE_ADMIN")
                 .antMatchers(moderator_resources).hasAuthority("ROLE_MODERATOR")
-                .antMatchers(user_resources).hasAuthority("ROLE_USER")
+                .antMatchers(auth_resources).authenticated()
+                .antMatchers(anonymous_resources).not().authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll()

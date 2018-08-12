@@ -11,6 +11,7 @@
 <div layout:fragment="content">
     <div class="card">
         <form action="/registration" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             First Name: <input type="text" class="form-group" name="first_name" placeholder="First Name"/><br/>
             Last Name: <input type="text" class="form-group" name="last_name" placeholder="Last Name"/><br/>
             Username: <input type="text" class="form-group" name="username" placeholder="Username" /><br/>
