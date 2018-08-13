@@ -4,8 +4,10 @@ import com.spring_demo.models.Role;
 import com.spring_demo.models.User;
 import com.spring_demo.models.UserDetailsImpl;
 import com.spring_demo.repositories.UserRepository;
+import com.spring_demo.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +27,7 @@ public class HomeController {
 
     @GetMapping(value = "/")
     public ModelAndView index(Model model) {
+
 //        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //        User user=null;
 //        try {
