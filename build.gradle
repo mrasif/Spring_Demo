@@ -13,16 +13,18 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-
 jar {
     enabled = true
 }
 
 bootJar {
-    baseName = 'gs-spring-boot'
+    baseName = 'spring-demo'
     version =  '0.1.0'
+    mainClassName = 'com.spring_demo.App'
+    manifest {
+        attributes 'Start-Class': 'com.spring_demo.App'
+    }
 }
-
 
 group 'spring-demo'
 version '1.0-SNAPSHOT'

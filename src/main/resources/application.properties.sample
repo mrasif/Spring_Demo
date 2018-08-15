@@ -1,3 +1,5 @@
+server.port=8080
+
 spring.mustache.expose-request-attributes=true
 spring.thymeleaf.cache=false
 spring.jpa.hibernate.ddl-auto=update

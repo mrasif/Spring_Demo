@@ -4,13 +4,16 @@ import com.spring_demo.models.Role;
 import com.spring_demo.models.User;
 import com.spring_demo.repositories.RoleRepository;
 import com.spring_demo.repositories.UserRepository;
+import com.spring_demo.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 @RestController
@@ -20,6 +23,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/login")
     public ModelAndView login(Model model){
@@ -57,6 +62,14 @@ public class UserController {
         user.setRoles(roles);
         user.setActive(0);
         userRepository.save(user);
+
+        SimpleMailMessage mailMessage=new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setFrom("no-reply@example.com");
+        mailMessage.setSubject("Best Blog");
+        mailMessage.setText(String.format(Locale.US,"Hello %s,\r\nThank you very much for registering in best blog.",user.getDisplayName()));
+        emailService.sendEmail(mailMessage);
+
         ModelAndView mav=new ModelAndView();
         mav.setViewName("redirect:/login");
         return mav;

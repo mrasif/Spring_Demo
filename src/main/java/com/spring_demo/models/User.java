@@ -1,5 +1,8 @@
 package com.spring_demo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -17,6 +20,7 @@ public class User {
     @NotEmpty(message = "Username can not be empty.")
     private String username;
     @Column(name = "password")
+    @JsonIgnore
     private String password;
     @Column(name = "first_name")
     private String firstName;
