@@ -21,7 +21,7 @@ public class Article {
     private String body;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "article_user", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(name = "article_user", joinColumns = @JoinColumn(name = "article_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users;
 
     @CreatedDate

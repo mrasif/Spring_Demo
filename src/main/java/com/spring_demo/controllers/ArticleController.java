@@ -46,7 +46,7 @@ public class ArticleController {
         article.setUsers(userSet);
         articleRepository.save(article);
         ModelAndView mav=new ModelAndView();
-        mav.setViewName("redirect:/");
+        mav.setViewName("redirect:/articles");
         return mav;
     }
 }
