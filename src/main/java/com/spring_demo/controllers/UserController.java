@@ -4,6 +4,7 @@ import com.spring_demo.models.Role;
 import com.spring_demo.models.User;
 import com.spring_demo.repositories.RoleRepository;
 import com.spring_demo.repositories.UserRepository;
+import com.spring_demo.services.BCryptPasswordEncoderService;
 import com.spring_demo.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -25,6 +26,8 @@ public class UserController {
     private RoleRepository roleRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private BCryptPasswordEncoderService bCryptPasswordEncoderService;
 
     @GetMapping("/login")
     public ModelAndView login(Model model){
@@ -55,7 +58,7 @@ public class UserController {
         user.setLastName(lastName);
         user.setUsername(username);
         user.setEmail(email);
-        user.setPassword(getbCryptPasswordEncoder().encode(password));
+        user.setPassword(bCryptPasswordEncoderService.encode(password));
         Role role=roleRepository.findByRoleId(3).get();
         Set<Role> roles=new HashSet<>();
         roles.add(role);
@@ -81,9 +84,5 @@ public class UserController {
         ModelAndView mav=new ModelAndView();
         mav.setViewName("users/index");
         return mav;
-    }
-
-    private BCryptPasswordEncoder getbCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
     }
 }
