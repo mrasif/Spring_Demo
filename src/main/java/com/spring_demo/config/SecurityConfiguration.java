@@ -1,6 +1,7 @@
 package com.spring_demo.config;
 
 import com.spring_demo.repositories.UserRepository;
+import com.spring_demo.services.BCryptPasswordEncoderService;
 import com.spring_demo.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -23,16 +24,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private BCryptPasswordEncoderService bCryptPasswordEncoderService;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
-                .passwordEncoder(getbCryptPasswordEncoder());
+                .passwordEncoder(bCryptPasswordEncoderService.getEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         String[] resources = new String[]{
-                "/", "/css/**","/icons/**","/images/**","/js/**"
+                "/", "/css/**","/icons/**","/images/**","/js/**","/api/**"
         };
         String[] anonymous_resources = new String[]{
                 "/registration", "/login**"
@@ -46,6 +50,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         String[] auth_resources=new String[]{
             "/users/**"
         };
+
+        http.csrf().ignoringAntMatchers("/api/**");
+
 //        http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers(resources).permitAll()
@@ -77,7 +84,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         };
     }*/
 
-    private BCryptPasswordEncoder getbCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 }

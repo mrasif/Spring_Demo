@@ -1,6 +1,7 @@
 package com.spring_demo.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
