@@ -37,7 +37,7 @@ public class ApiUserController {
         JSONResponse jsonResponse=new JSONResponse();
 
         if (null!=userDetails) {
-            if (bCryptPasswordEncoderService.match(password, userDetails.getPassword())) {
+            if (bCryptPasswordEncoderService.matches(password, userDetails.getPassword())) {
                 User user = userRepository.findByUsername(userDetails.getUsername()).get();
                 jsonResponse.addBody("user", user);
                 jsonResponse.addBody("message", "Login successfully!");
