@@ -23,8 +23,6 @@ public class User {
     @Column(name = "password")
     @JsonIgnore
     private String password;
-    @Ignore
-    private String confirmPassword;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -47,7 +45,6 @@ public class User {
         this.userId=user.getUserId();
         this.email=user.getEmail();
         this.password=user.getPassword();
-        this.confirmPassword=user.getConfirmPassword();
         this.username=user.getUsername();
         this.firstName=user.getFirstName();
         this.lastName=user.getLastName();
@@ -77,14 +74,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 
     public String getUsername() {

@@ -17,10 +17,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 @RestController
@@ -41,85 +38,99 @@ public class ApiUserController {
     private BCryptPasswordEncoderService bCryptPasswordEncoderService;
 
     @PostMapping("/auth/sign_in")
-    public ResponseEntity signIn(@RequestParam String username, @RequestParam String password){
-        UserDetails userDetails=userDetailsService.loadUserByUsername(username);
+    public ResponseEntity signIn(@RequestParam String username, @RequestParam String password) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        Map<String,Object> body=new HashMap<>();
-        MultiValueMap<String,String> headers=new LinkedMultiValueMap<>();
-        HttpStatus httpStatus=HttpStatus.OK;
-        if (bCryptPasswordEncoderService.match(password,userDetails.getPassword())){
-            User user=userRepository.findByUsername(userDetails.getUsername()).get();
-            body.put("user",user);
-            body.put("message","Login successfully!");
-            String token=jwtService.createPayload(user);
-            headers.add("access-tocken",token);
+        Map<String, Object> body = new HashMap<>();
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        HttpStatus httpStatus = HttpStatus.OK;
+        if (null!=userDetails) {
+            if (bCryptPasswordEncoderService.match(password, userDetails.getPassword())) {
+                User user = userRepository.findByUsername(userDetails.getUsername()).get();
+                body.put("user", user);
+                body.put("message", "Login successfully!");
+                String token = jwtService.createPayload(user);
+                headers.add("access-tocken", token);
+                Calendar calendar=Calendar.getInstance();
+                calendar.setTimeInMillis(jwtService.getExpired(token));
+                headers.add("token-expiry",calendar.getTime().toString());
+            } else {
+                body.put("user", null);
+                body.put("message", "Invalid username or password!");
+                httpStatus = HttpStatus.UNAUTHORIZED;
+            }
         }
         else {
-            body.put("user",null);
-            body.put("message","Invalid username or password!");
-            httpStatus=HttpStatus.UNAUTHORIZED;
+            body.put("user", null);
+            body.put("message", "User is not activated by Administrator!");
+            httpStatus = HttpStatus.UNAUTHORIZED;
         }
-        return new ResponseEntity<>(body,headers,httpStatus);
+        return new ResponseEntity<>(body, headers, httpStatus);
     }
 
     @DeleteMapping("/auth/sign_out")
-    public ResponseEntity signOut(@RequestHeader(value = "access-token",required = true) String token){
-        Map<String,Object> body=new HashMap<>();
-        MultiValueMap<String,String> headers=new LinkedMultiValueMap<>();
-        HttpStatus httpStatus=HttpStatus.OK;
+    public ResponseEntity signOut(@RequestHeader(value = "access-token", required = true) String token) {
+        Map<String, Object> body = new HashMap<>();
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        HttpStatus httpStatus = HttpStatus.OK;
 
-        if(jwtService.isAuthenticated(token)){
-            body.put("user",jwtService.currentUser(token));
-            body.put("message","Logout successfully!");
+        if (jwtService.isAuthenticated(token)) {
+            body.put("user", jwtService.currentUser(token));
+            body.put("message", "Logout successfully!");
             jwtService.deletePayload(token);
+        } else {
+            body.put("message", "Unauthorized!");
+            httpStatus = HttpStatus.UNAUTHORIZED;
         }
-        else {
-            body.put("message","Unauthorized!");
-            httpStatus=HttpStatus.UNAUTHORIZED;
-        }
-        return new ResponseEntity<>(body,headers,httpStatus);
+        return new ResponseEntity<>(body, headers, httpStatus);
     }
 
     @PostMapping("/auth/sign_up")
-    public ResponseEntity signUp(@RequestBody User user){
+    public ResponseEntity signUp(@RequestBody User user) {
         System.out.println("################################");
         System.out.println(user);
         System.out.println("################################");
-        Map<String,Object> body=new HashMap<>();
-        MultiValueMap<String,String> headers=new LinkedMultiValueMap<>();
-        HttpStatus httpStatus=HttpStatus.OK;
-        user.setPassword(bCryptPasswordEncoderService.encode(user.getConfirmPassword()));
-        Role role=roleRepository.findByRoleId(3).get();
-        Set<Role> roles=new HashSet<>();
+        Map<String, Object> body = new HashMap<>();
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        HttpStatus httpStatus = HttpStatus.OK;
+        user.setPassword(bCryptPasswordEncoderService.encode(user.getPassword()));
+        Role role = roleRepository.findByRoleId(3).get();
+        Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);
         user.setActive(0);
         try {
             userRepository.save(user);
-            body.put("user",userRepository.findByUsername(user.getUsername()));
-            body.put("message","Register successfully!");
-        }catch (Exception e){
-            body.put("message","Registration failed!");
-            httpStatus=HttpStatus.UNPROCESSABLE_ENTITY;
+            body.put("user", userRepository.findByUsername(user.getUsername()));
+            body.put("message", "Register successfully!");
+        } catch (Exception e) {
+            body.put("message", "Registration failed!");
+            httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
         }
-        return new ResponseEntity<>(body,headers,httpStatus);
+        return new ResponseEntity<>(body, headers, httpStatus);
     }
 
     @GetMapping("/users")
-    public ResponseEntity getUser(@RequestHeader(value = "access-token",required = true) String token){
-        Map<String,Object> body=new HashMap<>();
-        MultiValueMap<String,String> headers=new LinkedMultiValueMap<>();
-        HttpStatus httpStatus=HttpStatus.OK;
+    public ResponseEntity getUser(@RequestHeader(value = "access-token", required = true) String token) {
+        Map<String, Object> body = new HashMap<>();
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        HttpStatus httpStatus = HttpStatus.OK;
 
-        if(jwtService.isAuthenticated(token)){
-            body.put("user",jwtService.currentUser(token));
-            body.put("message","User fetched successfully!");
+        if (jwtService.isAuthenticated(token)) {
+            User user=jwtService.currentUser(token);
+            if (null==user){
+                body.put("message", "Unauthorized!");
+                httpStatus = HttpStatus.UNAUTHORIZED;
+            }
+            else {
+                body.put("user", user);
+                body.put("message", "User fetched successfully!");
+            }
+        } else {
+            body.put("message", "Unauthorized!");
+            httpStatus = HttpStatus.UNAUTHORIZED;
         }
-        else {
-            body.put("message","Unauthorized!");
-            httpStatus=HttpStatus.UNAUTHORIZED;
-        }
-        return new ResponseEntity<>(body,headers,httpStatus);
+        return new ResponseEntity<>(body, headers, httpStatus);
     }
 
 }
