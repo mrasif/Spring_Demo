@@ -36,7 +36,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         String[] resources = new String[]{
-                "/", "/css/**","/icons/**","/images/**","/js/**","/api/**"
+                "/", "/css/**","/icons/**","/images/**","/js/**"
+        };
+        String[] apis_public=new String[]{
+                "/api/auth/sign_in", "/api/auth/sign_up"
+        };
+        String[] apis_protected=new String[]{
+                "/api/**"
         };
         String[] anonymous_resources = new String[]{
                 "/registration", "/login**"
@@ -56,6 +62,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers(resources).permitAll()
+                .antMatchers(apis_public).permitAll()
+                .antMatchers(apis_protected).permitAll()
                 .antMatchers(admin_resources).hasAuthority("ROLE_ADMIN")
                 .antMatchers(moderator_resources).hasAuthority("ROLE_MODERATOR")
                 .antMatchers(auth_resources).authenticated()
@@ -67,21 +75,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login?logout");
 
     }
-
-    /*private PasswordEncoder getPasswordEncoder(){
-        return new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence rawPassword) {
-                System.out.println("encode: "+rawPassword);
-                return rawPassword.toString();
-            }
-
-            @Override
-            public boolean matches(CharSequence rawPassword, String encodedPassword) {
-                System.out.println("matches: raw=>"+rawPassword+"\tEncoded=>"+encodedPassword);
-                return encodedPassword.equalsIgnoreCase(rawPassword.toString());
-            }
-        };
-    }*/
 
 }
