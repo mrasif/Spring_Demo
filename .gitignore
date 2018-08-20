@@ -9,3 +9,5 @@ hs_err_pid*
 .gradle
 build/
 out/
+derby.log
+derby_db

@@ -47,6 +47,10 @@ dependencies {
 
     compile 'org.springframework.boot:spring-boot-starter-mustache'
     compile 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-
-    compile 'mysql:mysql-connector-java'
+    // MySQL
+//    compile 'mysql:mysql-connector-java'
+    // PostgresSQL
+//    compile 'org.postgresql:postgresql'
+    // Derby
+    compile 'org.apache.derby:derby'
 }

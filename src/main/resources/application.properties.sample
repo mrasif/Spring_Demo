@@ -1,10 +1,29 @@
 server.port=8080
+server.contextPath=<path of your application url for root use '/'>
+spring.main.banner-mode=off
+logging.level.org.springframework=ERROR
 
 spring.mustache.expose-request-attributes=true
 spring.thymeleaf.cache=false
 spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# MySQL
 spring.datasource.url=jdbc:mysql://localhost:3306/<database name>
-spring.datasource.username=<user name>
+spring.datasource.username=<username>
+spring.datasource.password=<password>
+
+# PostgresSQL
+spring.datasource.platform=postgres
+spring.datasource.url=jdbc:postgresql://localhost:5432/<database name>
+spring.datasource.username=<username>
+spring.datasource.password=<password>
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+
+# Derby
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.DerbyDialect
+spring.datasource.url=jdbc:derby:derby_db/<database>;create=true;user=<username>;password=<password>
+spring.datasource.username=<username>
 spring.datasource.password=<password>
 
 spring.mail.host = <smtp>
